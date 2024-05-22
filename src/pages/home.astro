@@ -1,9 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import UserList from "../components/UserList";
+import UsersTable from "../components/UsersTable";
 ---
 
 <Layout title="Caimas app | HOME">
-  <h1>HOME</h1>
-  <UserList client:load />
+  <UsersTable client:load />
 </Layout>

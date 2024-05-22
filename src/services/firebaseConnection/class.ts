@@ -18,25 +18,22 @@ class Firebase {
         });
     }
 
-    async getUsersList() {
-        if (this.db) {
-            const userRef = query(collection(this.db, "users"));
-            const docs = await getDocs(userRef);
-            const data: any[] = []
+    async getUsersList(): Promise<UserInterface[]> {
+        const userRef = query(collection(this.db, "users"));
+        const docs = await getDocs(userRef);
+        const data: any[] = []
 
-            docs.forEach((doc) => {
-                data.push({
-                    ...doc.data()
-                })
-            });
+        docs.forEach((doc) => {
+            data.push({
+                ...doc.data()
+            })
+        });
 
-            return data
-        }
-        return 'xd'
+        return data
     }
 
-    async registerUser(email: string, password: string, data: UserInterface) {
-        const res = await createUserWithEmailAndPassword(this.auth, email, password);
+    async registerUser(data: UserInterface, password: string) {
+        const res = await createUserWithEmailAndPassword(this.auth, data.email, password);
         const dataToSend: UserInterface = {
             ...data,
             id: res.user.uid,
