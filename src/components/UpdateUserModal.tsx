@@ -1,15 +1,15 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { addUserItem } from "../stores/userStore";
+import { addUserItem, updateUserItem } from "../stores/userStore";
 import { useState } from "react";
 
-const RegisterUserModal = () => {
+const UpdateUserModal = ({ userData }: { userData: UserInfo }) => {
   const [newUserData, setNewUserData] = useState<UserInterface>(
-      {} as UserInterface
+      userData || ({} as UserInterface)
     ),
     [password, setPassword] = useState("");
 
   const handleSubmit = () => {
-    addUserItem(newUserData, password);
+    updateUserItem(userData, newUserData);
     setNewUserData({} as UserInterface);
     setPassword("");
   };
@@ -66,7 +66,7 @@ const RegisterUserModal = () => {
                 }}
               />
             </div>
-            <div>
+            {/* <div>
               <label className="font-medium">Password</label>
               <input
                 type="password"
@@ -77,7 +77,7 @@ const RegisterUserModal = () => {
                   setPassword(e.target.value);
                 }}
               />
-            </div>
+            </div>*/}
           </form>
         </div>
       </Dialog.Description>
@@ -104,4 +104,4 @@ const RegisterUserModal = () => {
   );
 };
 
-export { RegisterUserModal };
+export { UpdateUserModal };

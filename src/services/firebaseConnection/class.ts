@@ -39,13 +39,24 @@ class Firebase {
             id: res.user.uid,
         }
         const newUserRef = doc(collection(this.db, "users"));
-        return setDoc(newUserRef, {
+        await setDoc(newUserRef, {
             ...dataToSend,
             id: newUserRef.id
         })
-        //return addDoc(collection(this.db, "users"), dataToSend);
+        return res.user.uid
     }
 
+    async updateUser(data: UserInfo, payload: UserInfo) {
+        await setDoc(doc(this.db, "users", data.id), {
+            ...data,
+            ...payload
+        });
+        return
+    }
+
+    async loginUser(email: string, password: string) {
+        return signInWithEmailAndPassword(this.auth, email, password);
+    }
 
     /**
      * Users Api
