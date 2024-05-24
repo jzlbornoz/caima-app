@@ -36,7 +36,7 @@ class Firebase {
         const res = await createUserWithEmailAndPassword(this.auth, data.email, password);
         const dataToSend: UserInterface = {
             ...data,
-            id: res.user.uid,
+            uid: res.user.uid,
         }
         const newUserRef = doc(collection(this.db, "users"));
         await setDoc(newUserRef, {
@@ -56,7 +56,23 @@ class Firebase {
 
     async loginUser(email: string, password: string) {
         return signInWithEmailAndPassword(this.auth, email, password);
+
     }
+
+    async getUserFromId(uid: string, accessToken: string) {
+        const userRef = query(collection(this.db, "users"), where("uid", "==", uid));
+        const docs = await getDocs(userRef);
+        const data: any[] = []
+
+        docs.forEach((doc) => {
+            data.push({
+                ...doc.data()
+            })
+        });
+
+        return data.length > 0 ? { ...data[0], uid, accessToken } : undefined
+    }
+
 
     /**
      * Users Api
