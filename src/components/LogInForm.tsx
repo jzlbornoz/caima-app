@@ -53,9 +53,9 @@ const LogInForm = () => {
       {$loginStatus.status === "error" && (
         <ErrorAlert error={$loginStatus.message} />
       )}
-      <div className="text-center">
+      {/**<div className="text-center">
         <a className="hover:text-lightPrimaryColor">Forgot password?</a>
-      </div>
+      </div> */}
     </form>
   );
 };

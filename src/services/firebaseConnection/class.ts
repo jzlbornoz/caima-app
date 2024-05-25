@@ -2,6 +2,8 @@ import { type FirebaseApp } from 'firebase/app';
 import { createUserWithEmailAndPassword, deleteUser, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { collection, doc, getDoc, getDocs, getFirestore, query, where, setDoc, addDoc, deleteDoc } from 'firebase/firestore'
 import initFirebaseFunction from './firebaseInitConfig';
+import type { PartyInterface } from '../../typesDefs/party';
+import { TimeStampsToDate } from '../../utils/TimeStampsToDate';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 class Firebase {
@@ -71,6 +73,35 @@ class Firebase {
         });
 
         return data.length > 0 ? { ...data[0], uid, accessToken } : undefined
+    }
+
+    // PARTY
+    async registerParty(
+        data: PartyInterface
+    ) {
+        const newPartyRef = doc(collection(this.db, "parties"));
+        await setDoc(newPartyRef, {
+            ...data,
+            id: newPartyRef.id,
+        });
+        return newPartyRef.id
+    }
+
+    async getPartiesList(): Promise<PartyInterface[]> {
+        const partyRes = query(collection(this.db, "parties"));
+        const docs = await getDocs(partyRes);
+        const data: any[] = []
+
+        docs.forEach((doc) => {
+            data.push({
+                ...doc.data()
+            })
+        });
+
+        return data.map(item => {
+            item.date = TimeStampsToDate(item.date.seconds)
+            return item
+        })
     }
 
 

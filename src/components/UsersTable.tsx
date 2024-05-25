@@ -36,18 +36,20 @@ const UsersTable = () => {
               </h3>
             </div>
 
-            <Dialog.Root>
-              <Dialog.Trigger className="rounded-md bg-lightPrimaryColor hover:bg-primaryColor px-5 py-2.5 text-sm font-medium text-backgroundColor hover:text-titleColor shadow ">
-                Registrar Usuario
-              </Dialog.Trigger>
-              <Dialog.Portal>
-                <Dialog.Overlay className="fixed inset-0 w-full h-full bg-black opacity-40" />
-                <Dialog.Content className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full max-w-lg mx-auto px-4">
-                  {/* == REGISTER MODAL */}
-                  <RegisterUserModal />
-                </Dialog.Content>
-              </Dialog.Portal>
-            </Dialog.Root>
+            {$userInfo.isAdmin && (
+              <Dialog.Root>
+                <Dialog.Trigger className="rounded-md bg-lightPrimaryColor hover:bg-primaryColor px-5 py-2.5 text-sm font-medium text-backgroundColor hover:text-titleColor shadow ">
+                  Register User
+                </Dialog.Trigger>
+                <Dialog.Portal>
+                  <Dialog.Overlay className="fixed inset-0 w-full h-full bg-black opacity-40" />
+                  <Dialog.Content className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full max-w-lg mx-auto px-4">
+                    {/* == REGISTER MODAL */}
+                    <RegisterUserModal />
+                  </Dialog.Content>
+                </Dialog.Portal>
+              </Dialog.Root>
+            )}
           </div>
           <div className="mt-12 relative h-max overflow-auto">
             <table className="w-full table-auto text-sm text-left">
