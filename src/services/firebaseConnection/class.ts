@@ -1,3 +1,4 @@
+import type { PartyInformationInterface } from './../../typesDefs/party';
 import { type FirebaseApp } from 'firebase/app';
 import { createUserWithEmailAndPassword, deleteUser, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { collection, doc, getDoc, getDocs, getFirestore, query, where, setDoc, addDoc, deleteDoc } from 'firebase/firestore'
@@ -61,7 +62,7 @@ class Firebase {
 
     }
 
-    async getUserFromId(uid: string, accessToken: string) {
+    async getUserFromUId(uid: string, accessToken?: string) {
         const userRef = query(collection(this.db, "users"), where("uid", "==", uid));
         const docs = await getDocs(userRef);
         const data: any[] = []
@@ -74,7 +75,19 @@ class Firebase {
 
         return data.length > 0 ? { ...data[0], uid, accessToken } : undefined
     }
+    async getUserFromId(id: string) {
+        const userRef = query(collection(this.db, "users"), where("id", "==", id));
+        const docs = await getDocs(userRef);
+        const data: any[] = []
 
+        docs.forEach((doc) => {
+            data.push({
+                ...doc.data()
+            })
+        });
+
+        return data.length > 0 ? { ...data[0], id } : undefined
+    }
     // PARTY
     async registerParty(
         data: PartyInterface
@@ -87,7 +100,7 @@ class Firebase {
         return newPartyRef.id
     }
 
-    async getPartiesList(): Promise<PartyInterface[]> {
+    async getPartiesList(): Promise<PartyInformationInterface[]> {
         const partyRes = query(collection(this.db, "parties"));
         const docs = await getDocs(partyRes);
         const data: any[] = []
@@ -104,6 +117,23 @@ class Firebase {
         })
     }
 
+    async getPartyById(id: string) {
+        const docRef = doc(this.db, "parties", id);
+        const partyData = (await getDoc(docRef)).data();
+        if (partyData) {
+            return {
+                ...partyData,
+                date: TimeStampsToDate(partyData.date.seconds),
+            }
+        }
+    };
+
+    async updateParty(party: PartyInformationInterface, payload: PartyInformationInterface) {
+        return await setDoc(doc(this.db, "parties", party.id), {
+            ...party,
+            ...payload
+        });
+    }
 
     /**
      * Users Api

@@ -1,57 +1,21 @@
-import { useEffect, useState } from "react";
 import { useStore } from "@nanostores/react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { getUserList, userInfo, userList } from "../stores/userStore";
-import { RegisterUserModal } from "./RegisterUserModal";
+import { userInfo } from "../stores/userStore";
 import { UpdateUserModal } from "./UpdateUserModal";
 import { Loader } from "./Loader";
 
-const UsersTable = () => {
+const PartyPlayersTable = ({
+  playersItems,
+}: {
+  playersItems: UserInterface[];
+}) => {
   const $userInfo = useStore(userInfo);
-
-  const [tableItems, setTableItems] = useState<UserInterface[]>([]),
-    [loading, setLoading] = useState(true);
-
-  const $userList = useStore(userList);
-
-  useEffect(() => {
-    getUserList();
-  }, []);
-
-  useEffect(() => {
-    if ($userList) {
-      setTableItems(Object.values($userList));
-      setLoading(false);
-    }
-  }, [$userList]);
 
   return (
     <section>
-      {!loading && tableItems.length > 0 ? (
-        <div className="max-w-screen-2xl mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl">
-          <div className="items-center justify-between flex">
-            <div className="max-w-lg">
-              <h3 className="text-lightPrimaryColor text-xl font-bold sm:text-2xl">
-                Users
-              </h3>
-            </div>
-
-            {$userInfo.isAdmin && (
-              <Dialog.Root>
-                <Dialog.Trigger className="rounded-md bg-lightPrimaryColor hover:bg-primaryColor px-5 py-2.5 text-sm font-medium text-backgroundColor hover:text-titleColor shadow ">
-                  Register User
-                </Dialog.Trigger>
-                <Dialog.Portal>
-                  <Dialog.Overlay className="fixed inset-0 w-full h-full bg-black opacity-40" />
-                  <Dialog.Content className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-full max-w-lg mx-auto px-4">
-                    {/* == REGISTER MODAL */}
-                    <RegisterUserModal />
-                  </Dialog.Content>
-                </Dialog.Portal>
-              </Dialog.Root>
-            )}
-          </div>
-          <div className="mt-12 relative h-max overflow-auto">
+      {playersItems.length > 0 ? (
+        <div className="max-w-screen-2xl mx-auto   bg-secondBackgroundColor  rounded-xl">
+          <div className="relative h-max overflow-auto">
             <table className="w-full table-auto text-sm text-left">
               <thead className="text-lightPrimaryColor font-medium border-b">
                 <tr>
@@ -61,7 +25,7 @@ const UsersTable = () => {
                 </tr>
               </thead>
               <tbody className="text-textColor divide-y">
-                {tableItems.map((item, idx) => (
+                {playersItems.map((item, idx) => (
                   <tr key={idx}>
                     <td className="pr-6 py-4 whitespace-nowrap">
                       {item.userName}
@@ -102,4 +66,4 @@ const UsersTable = () => {
   );
 };
 
-export default UsersTable;
+export { PartyPlayersTable };

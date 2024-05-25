@@ -6,15 +6,23 @@ import { useEffect, useState } from "react";
 import { Loader } from "./Loader";
 import * as Dialog from "@radix-ui/react-dialog";
 import { RegisterPartyModal } from "./RegisterPartyModal";
-import { getPartiesListFunction, partyList } from "../stores/partyStore";
-import type { PartyInterface } from "../typesDefs/party";
+import {
+  admissionApplicationStatus,
+  getPartiesListFunction,
+  partyList,
+  registerAdmissionApplications,
+} from "../stores/partyStore";
+import type { PartyInformationInterface } from "../typesDefs/party";
 
 const Landing = () => {
   const $userInfo = useStore(userInfo);
   const $userInfoLoading = useStore(userInfoLoading);
   const $partyList = useStore(partyList);
+  const $admissionApplicationStatus = useStore(admissionApplicationStatus);
 
-  const [partyListData, setPartyListData] = useState<PartyInterface[]>([]);
+  const [partyListData, setPartyListData] = useState<
+    PartyInformationInterface[]
+  >([]);
 
   useEffect(() => {
     getAccessToken();
@@ -22,9 +30,16 @@ const Landing = () => {
   }, []);
   useEffect(() => {
     if ($partyList) {
-      setPartyListData(Object.values($partyList));
+      setPartyListData(
+        Object.values($partyList) as PartyInformationInterface[]
+      );
     }
   }, [$partyList]);
+
+  const handleAdmissionApplication = (party: PartyInformationInterface) => {
+    console.log("submit");
+    registerAdmissionApplications(party, $userInfo.id);
+  };
 
   return (
     <main className="w-full h-85vh flex flex-col items-center justify-center px-4">
@@ -53,12 +68,59 @@ const Landing = () => {
             >
               <div className="items-center justify-between flex">
                 <div className="max-w-lg flex justify-center items-start flex-col">
-                  <h3 className="text-lightPrimaryColor text-xl font-bold sm:text-2xl">
+                  <a
+                    className="text-lightPrimaryColor text-xl font-bold sm:text-2xl"
+                    href={`/party/${party.id}`}
+                  >
                     Caima: {party.date.toDateString()}
-                  </h3>
-                  {$userInfo.isAdmin && (
-                    <span className="text-textColor">add users</span>
-                  )}
+                  </a>
+
+                  <div className="mt-2">
+                    <div
+                      className={`flex items-center text-sm font-medium underline cursor-pointer ${
+                        party?.admissionApplications?.some(
+                          (userId) => userId === $userInfo?.id
+                        ) && "text-primaryColor"
+                      }`}
+                    >
+                      {party?.players?.some(
+                        (userId) => userId === $userInfo?.id
+                      ) ? (
+                        <a href={`/party/${party.id}`}>You are participating</a>
+                      ) : (
+                        <span
+                          onClick={() => {
+                            if (
+                              !party?.admissionApplications?.some(
+                                (userId) => userId === $userInfo?.id
+                              )
+                            )
+                              handleAdmissionApplication(party);
+                          }}
+                        >
+                          {$admissionApplicationStatus.status
+                            ? `${$admissionApplicationStatus.message}`
+                            : party?.admissionApplications?.some(
+                                (userId) => userId === $userInfo?.id
+                              )
+                            ? "Waiting for approval"
+                            : "Request participation"}
+                        </span>
+                      )}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-3.5 w-3.5 ml-1"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -79,6 +141,7 @@ const Landing = () => {
                   <p className="">
                     Don't have an account?{" "}
                     <a
+                      data-astro-reload
                       className="font-medium text-lightPrimaryColor hover:text-lightSecondaryColor"
                       href="/sign-in"
                     >

@@ -74,7 +74,7 @@ export async function getAccessToken() {
 }
 
 export async function setUserLoggedInfo(user: userLogged) {
-    const res = await fb.getUserFromId(user.uid, user.accessToken || '')
+    const res = await fb.getUserFromUId(user.uid, user.accessToken || '')
     //Aca solo debe ir accessToken
     localStorage.setItem('userLogged', JSON.stringify({ ...res, accessToken: user.accessToken }));
     userInfo.set({ ...res, accessToken: user.accessToken } as UserInterface)
@@ -87,7 +87,7 @@ export async function logInUser(email: string, password: string) {
         const { user }: { user: userLogged } = await fb.loginUser(email, password)
 
         if (user.accessToken) {
-            const res = await fb.getUserFromId(user.uid, user.accessToken)
+            const res = await fb.getUserFromUId(user.uid, user.accessToken)
             setUserLoggedInfo(user)
             loginStatus.set({ status: 'success', message: 'Login exitoso' })
             return res
