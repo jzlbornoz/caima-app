@@ -1,6 +1,8 @@
 import { userInfo } from "../stores/userStore";
 import { useStore } from "@nanostores/react";
 import type { PartyInformationInterface } from "../typesDefs/party";
+import { acceptAdmissionApplicationFunction } from "../stores/partyStore";
+import { useState } from "react";
 
 const AdmissionApplicationUsersList = ({
   admissionApplicationsUsers,
@@ -10,10 +12,19 @@ const AdmissionApplicationUsersList = ({
   partyData: PartyInformationInterface;
 }) => {
   const $userInfo = useStore(userInfo);
+  const [admissionApplicationsUsersData, setAdmissionApplicationsUsers] =
+    useState<UserInterface[]>(admissionApplicationsUsers);
+
+  const handleAcceptUser = (userId: string) => {
+    acceptAdmissionApplicationFunction(partyData, userId);
+    setAdmissionApplicationsUsers(
+      admissionApplicationsUsersData.filter((item) => item.id !== userId)
+    );
+  };
 
   return (
     <ul className="mt-12 divide-y">
-      {admissionApplicationsUsers?.map((item, idx) => (
+      {admissionApplicationsUsersData?.map((item, idx) => (
         <li className="py-5 flex items-start justify-between">
           <div className="flex gap-3">
             <svg
@@ -43,7 +54,10 @@ const AdmissionApplicationUsersList = ({
             </div>
           </div>
           {$userInfo.id === partyData.createdBy && (
-            <span className="text-sm font-bold text-backgroundColor  rounded-lg px-3 py-2  bg-lightPrimaryColor hover:bg-textColor">
+            <span
+              className="text-sm font-bold text-backgroundColor  rounded-lg px-3 py-2  bg-lightPrimaryColor hover:bg-textColor cursor-pointer"
+              onClick={() => handleAcceptUser(item.id)}
+            >
               Accept
             </span>
           )}

@@ -37,7 +37,6 @@ const Landing = () => {
   }, [$partyList]);
 
   const handleAdmissionApplication = (party: PartyInformationInterface) => {
-    console.log("submit");
     registerAdmissionApplications(party, $userInfo.id);
   };
 

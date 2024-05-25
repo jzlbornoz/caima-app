@@ -7,6 +7,7 @@ const HeaderButtons = () => {
   const $userInfoLoading = useStore(userInfoLoading);
   const handleLogout = () => {
     logOutUser();
+    navigate("/");
   };
 
   return (

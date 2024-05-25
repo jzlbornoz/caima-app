@@ -45,7 +45,6 @@ export async function getPartiesListFunction(): Promise<void> {
 export async function registerAdmissionApplications(partyData: PartyInformationInterface, newUserId: string) {
 
     if (partyData?.admissionApplications?.some(userId => userId === newUserId)) {
-        console.log('Application already sent');
         throw new Error('Application already sent');
     }
     admissionApplicationStatus.set({
@@ -65,8 +64,34 @@ export async function registerAdmissionApplications(partyData: PartyInformationI
         })
         return updatedParty
     } catch (error: any) {
-        console.log('EEEEEEEEE', error)
+
         admissionApplicationStatus.set({
+            status: 'error',
+            message: `Error: ${error.code}`,
+        })
+    }
+}
+
+export async function acceptAdmissionApplicationFunction(partyData: PartyInformationInterface, userIdToAccept: string): Promise<void> {
+    admissionApplicationStatus.set({
+        status: 'loading',
+        message: `Accepting user...`,
+    })
+    try {
+        const newAdmissionApplications = partyData?.admissionApplications?.filter(userId => userId !== userIdToAccept)
+        const newPlayers = partyData?.players ? [...partyData?.players, userIdToAccept] : [userIdToAccept]
+        const updatedParty = await fb.updateParty(partyData, { ...partyData, admissionApplications: newAdmissionApplications, players: newPlayers })
+        partyList.setKey(
+            partyData.id,
+            { ...partyData, admissionApplications: newAdmissionApplications, players: newPlayers }
+        );
+        admissionApplicationStatus.set({
+            status: 'success',
+            message: `User accepted successfully.`,
+        })
+        return updatedParty
+    } catch (error: any) {
+        partyStatus.set({
             status: 'error',
             message: `Error: ${error.code}`,
         })
