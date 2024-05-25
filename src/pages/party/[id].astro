@@ -2,8 +2,8 @@
 import Layout from "../../layouts/Layout.astro";
 import Firebase from "../../services/firebaseConnection/class";
 import type { PartyInformationInterface } from "../../typesDefs/party";
-import { PartyPlayersTable } from "../../components/PartyPlayersTable";
 import { AdmissionApplicationUsersList } from "../../components/AdmissionApplicationUsersList";
+import { PartyPlayersStats } from "../../components/PartyPlayersStats";
 
 // Define getStaticPaths to specify the paths Astro should generate
 export async function getStaticPaths() {
@@ -36,12 +36,11 @@ const admissionApplicationsUsers = await getPartyPlayersData(
 ---
 
 <Layout title={`Caimas App | Caima ${partyData.date}`}>
-  <section
-    class="max-w-screen-2xl mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl"
-  >
-    <span class="text-titleColor text-2xl">Caima players</span>
-    <PartyPlayersTable playersItems={playersData} client:load />
-  </section>
+  <PartyPlayersStats
+    playersData={playersData}
+    partyData={partyData}
+    client:load
+  />
   {
     admissionApplicationsUsers.length > 0 && (
       <section class="max-w-screen-2xl mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl">
