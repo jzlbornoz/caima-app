@@ -34,13 +34,6 @@ const PartyStatsList = ({
       }
       return {
         ...player,
-        stats: !player.stats?.userId
-          ? {
-              ...player.stats,
-              goals: 0,
-              victory: 0,
-            }
-          : player.stats,
       } as PartyPlayerInterface;
     });
 
@@ -88,7 +81,7 @@ const PartyStatsList = ({
                 handleOnChange(
                   idx,
                   {
-                    goals: parseInt(e.target.value),
+                    goals: parseInt(e.target.value) || 0,
                     victory: item?.stats?.victory || 0,
                   } as PartyInformationStatsInterface,
                   true
@@ -98,7 +91,7 @@ const PartyStatsList = ({
                 handleOnChange(
                   idx,
                   {
-                    goals: parseInt(e.target.value),
+                    goals: parseInt(e.target.value) || 0,
                     victory: item?.stats?.victory || 0,
                   } as PartyInformationStatsInterface,
                   false
@@ -116,7 +109,7 @@ const PartyStatsList = ({
                 handleOnChange(
                   idx,
                   {
-                    victory: parseInt(e.target.value),
+                    victory: parseInt(e.target.value) || 0,
                     goals: item?.stats?.goals || 0,
                   } as PartyInformationStatsInterface,
                   false
@@ -126,7 +119,7 @@ const PartyStatsList = ({
                 handleOnChange(
                   idx,
                   {
-                    victory: parseInt(e.target.value),
+                    victory: parseInt(e.target.value) || 0,
                     goals: item?.stats?.goals || 0,
                   } as PartyInformationStatsInterface,
                   true
