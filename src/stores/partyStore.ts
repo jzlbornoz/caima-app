@@ -1,6 +1,6 @@
 import { atom, map } from "nanostores";
 import Firebase from "../services/firebaseConnection/class";
-import type { PartyInformationGoalInterface, PartyInformationInterface, PartyInterface } from "../typesDefs/party";
+import type { PartyInformationGoalInterface, PartyInformationInterface, PartyInformationStatsInterface, PartyInterface } from "../typesDefs/party";
 
 const fb = await new Firebase()
 export const partyList = map<Record<string, PartyInformationInterface>>({});
@@ -98,12 +98,12 @@ export async function acceptAdmissionApplicationFunction(partyData: PartyInforma
     }
 }
 
-export async function registerGoalsFunction(partyData: PartyInformationInterface, partyGoals: PartyInformationGoalInterface[]): Promise<void> {
+export async function registerGoalsFunction(partyData: PartyInformationInterface, partyStats: PartyInformationStatsInterface[]): Promise<void> {
     try {
-        const updatedParty = await fb.updateParty(partyData, { ...partyData, goals: partyGoals })
+        const updatedParty = await fb.updateParty(partyData, { ...partyData, stats: partyStats })
         partyList.setKey(
             partyData.id,
-            { ...partyData, goals: partyGoals }
+            { ...partyData, stats: partyStats }
         );
         return updatedParty
     } catch (error: any) {

@@ -3,11 +3,12 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { userInfo } from "../stores/userStore";
 import { UpdateUserModal } from "./UpdateUserModal";
 import { Loader } from "./Loader";
+import type { PartyPlayerInterface } from "../typesDefs/party";
 
 const PartyPlayersTable = ({
   playersItems,
 }: {
-  playersItems: UserInterface[];
+  playersItems: PartyPlayerInterface[];
 }) => {
   const $userInfo = useStore(userInfo);
 
@@ -35,10 +36,10 @@ const PartyPlayersTable = ({
                       {item.email}
                     </td>
                     <td className="pr-6 py-4 whitespace-nowrap text-center">
-                      0
+                      {item?.stats?.goals || 0}
                     </td>
                     <td className="pr-6 py-4 whitespace-nowrap text-center">
-                      0
+                      {item?.stats?.victory || 0}
                     </td>
                     {$userInfo.isAdmin && (
                       <td className="text-right px-6 whitespace-nowrap">

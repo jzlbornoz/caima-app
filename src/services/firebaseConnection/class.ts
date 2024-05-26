@@ -129,10 +129,11 @@ class Firebase {
     };
 
     async updateParty(party: PartyInformationInterface, payload: PartyInformationInterface) {
-        return await setDoc(doc(this.db, "parties", party.id), {
+        const res = await setDoc(doc(this.db, "parties", party.id), {
             ...party,
             ...payload
         });
+        return res
     }
 
     /**

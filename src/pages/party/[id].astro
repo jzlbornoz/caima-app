@@ -24,14 +24,15 @@ async function getPartyPlayersData(playersIds: string[]) {
   const res = await Promise.all(
     playersIds.map(async (playerId) => await fb.getUserFromId(playerId))
   );
+
   return res as UserInterface[];
 }
 
 const { id } = Astro.params;
 const partyData = await getPartyData(id as string);
-const playersData = await getPartyPlayersData(partyData.players || []);
+const playersData = await getPartyPlayersData(partyData?.players || []);
 const admissionApplicationsUsers = await getPartyPlayersData(
-  partyData.admissionApplications || []
+  partyData?.admissionApplications || []
 );
 ---
 
