@@ -14,44 +14,16 @@ export async function getStaticPaths() {
     return { params: { id: item.id } };
   });
 }
-async function getPartyData(id: string) {
-  const fb = await new Firebase();
-  const res = await fb.getPartyById(id);
-  return res as PartyInformationInterface;
-}
-async function getPartyPlayersData(playersIds: string[]) {
-  const fb = await new Firebase();
-  const res = await Promise.all(
-    playersIds.map(async (playerId) => await fb.getUserFromId(playerId))
-  );
-
-  return res as UserInterface[];
-}
 
 const { id } = Astro.params;
-const partyData = await getPartyData(id as string);
-const playersData = await getPartyPlayersData(partyData?.players || []);
-const admissionApplicationsUsers = await getPartyPlayersData(
-  partyData?.admissionApplications || []
-);
 ---
 
-<Layout title={`Caimas App | Caima ${partyData.date}`}>
-  <PartyPlayersStats
-    playersData={playersData}
-    partyData={partyData}
-    client:load
-  />
-  {
-    admissionApplicationsUsers.length > 0 && (
-      <section class="max-w-screen-2xl mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl">
-        <span class="text-titleColor text-2xl">Users Requests</span>
-        <AdmissionApplicationUsersList
-          admissionApplicationsUsers={admissionApplicationsUsers}
-          partyData={partyData}
-          client:load
-        />
-      </section>
-    )
-  }
+<Layout title={`Caimas App | Caima`}>
+  <PartyPlayersStats client:load partyId={id} />
+  <section
+    class="max-w-screen-2xl mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl"
+  >
+    <span class="text-titleColor text-2xl">Users Requests</span>
+    <AdmissionApplicationUsersList client:load />
+  </section>
 </Layout>

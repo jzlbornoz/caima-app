@@ -103,4 +103,6 @@ export async function logInUser(email: string, password: string) {
 export async function logOutUser() {
     localStorage.removeItem('userLogged')
     userInfo.set({} as UserInterface)
+    loginStatus.set({ status: '', message: '' })
+    userList.set({})
 }

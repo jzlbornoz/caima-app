@@ -1,30 +1,39 @@
 import { userInfo } from "../stores/userStore";
 import { useStore } from "@nanostores/react";
-import type { PartyInformationInterface } from "../typesDefs/party";
-import { acceptAdmissionApplicationFunction } from "../stores/partyStore";
-import { useState } from "react";
+import {
+  acceptAdmissionApplicationFunction,
+  admissionApplicationStatus,
+  getAdmissionApplicationsUsersListFunction,
+  partyAdmissionList,
+  partyDataStats,
+} from "../stores/partyStore";
+import { useEffect } from "react";
 
-const AdmissionApplicationUsersList = ({
-  admissionApplicationsUsers,
-  partyData,
-}: {
-  admissionApplicationsUsers: UserInterface[];
-  partyData: PartyInformationInterface;
-}) => {
+const AdmissionApplicationUsersList = () => {
   const $userInfo = useStore(userInfo);
-  const [admissionApplicationsUsersData, setAdmissionApplicationsUsers] =
-    useState<UserInterface[]>(admissionApplicationsUsers);
+  const $partyAdmissionList = useStore(partyAdmissionList);
+  const $partyDataStats = useStore(partyDataStats);
+  const $admissionApplicationStatus = useStore(admissionApplicationStatus);
+
+  useEffect(() => {
+    getAdmissionApplicationsUsersListFunction(
+      $partyDataStats.admissionApplications
+    );
+  }, [$partyDataStats]);
 
   const handleAcceptUser = (userId: string) => {
-    acceptAdmissionApplicationFunction(partyData, userId);
-    setAdmissionApplicationsUsers(
-      admissionApplicationsUsersData.filter((item) => item.id !== userId)
+    acceptAdmissionApplicationFunction($partyDataStats, userId);
+    const newList = Object.values($partyAdmissionList)?.filter(
+      (item) => item.id !== userId
     );
+    newList.map((item) => {
+      partyAdmissionList.setKey(item.id, item);
+    });
   };
 
   return (
     <ul className="mt-12 divide-y">
-      {admissionApplicationsUsersData?.map((item, idx) => (
+      {Object.values($partyAdmissionList).map((item, idx) => (
         <li className="py-5 flex items-start justify-between">
           <div className="flex gap-3">
             <svg
@@ -53,12 +62,14 @@ const AdmissionApplicationUsersList = ({
               <span className="block text-sm text-textColor">{item.email}</span>
             </div>
           </div>
-          {$userInfo.id === partyData.createdBy && (
+          {$userInfo.id === $partyDataStats?.createdBy && (
             <span
               className="text-sm font-bold text-backgroundColor  rounded-lg px-3 py-2  bg-lightPrimaryColor hover:bg-textColor cursor-pointer"
               onClick={() => handleAcceptUser(item.id)}
             >
-              Accept
+              {$admissionApplicationStatus.message
+                ? $admissionApplicationStatus.message
+                : "Accept"}
             </span>
           )}
         </li>

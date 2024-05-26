@@ -4,6 +4,8 @@ import type { PartyInformationGoalInterface, PartyInformationInterface, PartyInf
 
 const fb = await new Firebase()
 export const partyList = map<Record<string, PartyInformationInterface>>({});
+export const partyAdmissionList = map<Record<string, UserInterface>>({});
+export const partyDataStats = atom({} as PartyInformationInterface);
 export const partyStatus = atom({ status: '', message: '' });
 export const admissionApplicationStatus = atom({ status: '', message: '' });
 
@@ -77,14 +79,33 @@ export async function acceptAdmissionApplicationFunction(partyData: PartyInforma
         status: 'loading',
         message: `Accepting user...`,
     })
+    console.log('e')
     try {
+        console.log('trying', partyData, userIdToAccept)
         const newAdmissionApplications = partyData?.admissionApplications?.filter(userId => userId !== userIdToAccept)
         const newPlayers = partyData?.players ? [...partyData?.players, userIdToAccept] : [userIdToAccept]
-        const updatedParty = await fb.updateParty(partyData, { ...partyData, admissionApplications: newAdmissionApplications, players: newPlayers })
+        const updatedParty = await fb.updateParty(partyData, {
+            ...partyData,
+            admissionApplications: newAdmissionApplications,
+            players: newPlayers,
+            stats: [...partyData.stats, { userId: userIdToAccept, goals: 0, victory: 0 }]
+        })
         partyList.setKey(
             partyData.id,
-            { ...partyData, admissionApplications: newAdmissionApplications, players: newPlayers }
+            {
+                ...partyData,
+                admissionApplications: newAdmissionApplications,
+                players: newPlayers,
+                stats: [...partyData.stats, { userId: userIdToAccept, goals: 0, victory: 0 }]
+            }
         );
+
+        console.log('AAAA', {
+            ...partyData,
+            admissionApplications: newAdmissionApplications,
+            players: newPlayers,
+            stats: [...partyData.stats, { userId: userIdToAccept, goals: 0, victory: 0 }]
+        })
         admissionApplicationStatus.set({
             status: 'success',
             message: `User accepted successfully.`,
@@ -105,6 +126,7 @@ export async function registerGoalsFunction(partyData: PartyInformationInterface
             partyData.id,
             { ...partyData, stats: partyStats }
         );
+
         return updatedParty
     } catch (error: any) {
         partyStatus.set({
@@ -112,4 +134,49 @@ export async function registerGoalsFunction(partyData: PartyInformationInterface
             message: `Error: ${error.code}`,
         })
     }
+}
+
+export async function getPartyDataFunction(id: string) {
+    const partyInformation = await fb.getPartyById(id) as PartyInformationInterface;
+    if (!partyInformation) {
+        throw new Error('Party not found');
+    }
+    const usersInformation = await getPartyPlayersDataFunction(partyInformation.players);
+    if (!usersInformation) {
+        throw new Error('users not found');
+    }
+
+    const statsWithInformation = partyInformation.stats.map(stat => {
+        const user = usersInformation.find(user => user.id === stat.userId);
+        if (!user) {
+            throw new Error('user not found');
+        }
+        return { ...stat, user: user }
+    })
+
+    partyDataStats.set({ ...partyInformation, stats: statsWithInformation })
+    return { ...partyInformation, stats: statsWithInformation }
+}
+export async function getPartyPlayersDataFunction(playersIds: string[]) {
+    const res = await Promise.all(
+        playersIds.map(async (playerId) => await fb.getUserFromId(playerId))
+    );
+
+    return res as UserInterface[];
+}
+export async function getAdmissionApplicationsUsersListFunction(ids: string[]) {
+    const usersInformation = await getPartyPlayersDataFunction(ids);
+    if (!usersInformation) {
+        throw new Error('users not found');
+    }
+
+    usersInformation.map((item, key) => {
+        partyAdmissionList.setKey(
+            item.id || key.toString(),
+            item as UserInterface
+        );
+    });
+
+
+    return usersInformation
 }

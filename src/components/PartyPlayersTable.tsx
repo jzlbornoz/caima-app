@@ -2,17 +2,15 @@ import { useStore } from "@nanostores/react";
 import { userInfo } from "../stores/userStore";
 import { Loader } from "./Loader";
 import type { PartyPlayerInterface } from "../typesDefs/party";
+import { partyDataStats } from "../stores/partyStore";
+import { useEffect } from "react";
 
-const PartyPlayersTable = ({
-  playersItems,
-}: {
-  playersItems: PartyPlayerInterface[];
-}) => {
-  const $userInfo = useStore(userInfo);
+const PartyPlayersTable = () => {
+  const $partyDataStats = useStore(partyDataStats);
 
   return (
     <section>
-      {playersItems.length > 0 ? (
+      {$partyDataStats?.stats?.length > 0 ? (
         <div className="max-w-screen-2xl mx-auto bg-secondBackgroundColor  rounded-xl">
           <div className="relative h-max overflow-auto">
             <table className="w-full table-auto text-sm text-left">
@@ -25,19 +23,19 @@ const PartyPlayersTable = ({
                 </tr>
               </thead>
               <tbody className="text-textColor divide-y">
-                {playersItems.map((item, idx) => (
+                {$partyDataStats?.stats?.map((item, idx) => (
                   <tr key={idx}>
                     <td className="pr-6 py-4 whitespace-nowrap">
-                      {item.userName}
+                      {item?.user?.userName}
                     </td>
                     <td className="pr-6 py-4 whitespace-nowrap">
-                      {item.email}
+                      {item?.user?.email}
                     </td>
                     <td className="pr-6 py-4 whitespace-nowrap text-center">
-                      {item?.stats?.goals || 0}
+                      {item?.goals || 0}
                     </td>
                     <td className="pr-6 py-4 whitespace-nowrap text-center">
-                      {item?.stats?.victory || 0}
+                      {item?.victory || 0}
                     </td>
                   </tr>
                 ))}

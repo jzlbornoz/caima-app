@@ -1,12 +1,26 @@
 import { useStore } from "@nanostores/react";
-import { logOutUser, userInfo, userInfoLoading } from "../stores/userStore";
+import {
+  getAccessToken,
+  logOutUser,
+  userInfo,
+  userInfoLoading,
+} from "../stores/userStore";
 import { navigate } from "astro/virtual-modules/transitions-router.js";
+import { admissionApplicationStatus, partyStatus } from "../stores/partyStore";
+import { useEffect } from "react";
 
 const HeaderButtons = () => {
   const $userInfo = useStore(userInfo);
   const $userInfoLoading = useStore(userInfoLoading);
+
+  useEffect(() => {
+    getAccessToken();
+  }, []);
+
   const handleLogout = () => {
     logOutUser();
+    admissionApplicationStatus.set({ status: "", message: "" });
+    partyStatus.set({ status: "", message: "" });
     navigate("/");
   };
 

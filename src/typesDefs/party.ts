@@ -15,7 +15,8 @@ export interface PartyInformationVictoryInterface {
 export interface PartyInformationStatsInterface {
     userId: string;
     victory: number;
-    goals: number
+    goals: number,
+    user?: UserInterface
 }
 
 export interface PartyInformationInterface extends PartyInterface {
