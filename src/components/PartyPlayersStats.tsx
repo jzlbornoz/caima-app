@@ -24,6 +24,10 @@ const PartyPlayersStats = ({
   const [partyDataToSubmit, setPartyDataToSubmit] = useState(partyData);
 
   useEffect(() => {
+    console.log("playersData", playersData);
+  }, [partyData]);
+
+  useEffect(() => {
     setPlayersListData(
       playersData.map((player) => {
         const goals =
@@ -46,21 +50,29 @@ const PartyPlayersStats = ({
 
   return (
     <>
-      <section className="max-w-screen-2xl md:mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl mx-2">
-        <span className="text-titleColor text-2xl">Caima players</span>
-        <PartyPlayersTable playersItems={playersListData} />
-      </section>
-      {$userInfo.isAdmin && (
+      {playersListData ? (
+        <section className="max-w-screen-2xl md:mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl mx-2">
+          <span className="text-titleColor text-2xl">Caima players</span>
+          <React.Suspense>
+            <PartyPlayersTable playersItems={playersListData} />
+          </React.Suspense>
+        </section>
+      ) : (
+        "CARGANDO"
+      )}
+      {/*$userInfo.isAdmin && (
         <section className="max-w-screen-2xl md:mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl mx-2">
           <span className="text-titleColor text-2xl">Goals and Victories</span>
-          <PartyStatsList
-            playersList={playersListData}
-            partyData={partyData}
-            setPlayersListData={setPlayersListData}
-            setPartyDataToSubmit={setPartyDataToSubmit}
-          />
+          <React.Suspense>
+            <PartyStatsList
+              playersList={playersListData}
+              partyData={partyData}
+              setPlayersListData={setPlayersListData}
+              setPartyDataToSubmit={setPartyDataToSubmit}
+            />
+          </React.Suspense>
         </section>
-      )}
+      )*/}
     </>
   );
 };

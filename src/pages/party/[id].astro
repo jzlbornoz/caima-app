@@ -40,9 +40,10 @@ const admissionApplicationsUsers = await getPartyPlayersData(
   <PartyPlayersStats
     playersData={playersData}
     partyData={partyData}
-    client:load
+    client:visible
   />
   {
+    /* 
     admissionApplicationsUsers.length > 0 && (
       <section class="max-w-screen-2xl mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl">
         <span class="text-titleColor text-2xl">Users Requests</span>
@@ -53,5 +54,6 @@ const admissionApplicationsUsers = await getPartyPlayersData(
         />
       </section>
     )
+    */
   }
 </Layout>
