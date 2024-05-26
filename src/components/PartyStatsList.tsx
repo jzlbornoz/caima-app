@@ -32,10 +32,10 @@ const PartyStatsList = () => {
         <span className="block text-sm text-lightPrimaryColor font-extrabold w-1/5 overflow-hidden">
           Player
         </span>
-        <div className="relative text-lightSecondaryColor w- w-1/4 text-center">
+        <div className="relative text-lightSecondaryColor w- w-1/4 text-left">
           Goals
         </div>
-        <div className="relative  text-lightSecondaryColor w-1/4 text-center">
+        <div className="relative  text-lightSecondaryColor w-1/4 text-left">
           Victories
         </div>
       </li>

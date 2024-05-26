@@ -17,7 +17,6 @@ const PartyPlayersTable = () => {
               <thead className="text-lightPrimaryColor font-medium border-b">
                 <tr>
                   <th className="py-3 pr-6">Username</th>
-                  <th className="py-3 pr-6">Email</th>
                   <th className="py-3 pr-6 text-center">Goals</th>
                   <th className="py-3 pr-6 text-center">Victories</th>
                 </tr>
@@ -27,9 +26,6 @@ const PartyPlayersTable = () => {
                   <tr key={idx}>
                     <td className="pr-6 py-4 whitespace-nowrap">
                       {item?.user?.userName}
-                    </td>
-                    <td className="pr-6 py-4 whitespace-nowrap">
-                      {item?.user?.email}
                     </td>
                     <td className="pr-6 py-4 whitespace-nowrap text-center">
                       {item?.goals || 0}
