@@ -32,7 +32,7 @@ const UsersTable = () => {
           <div className="items-center justify-between flex">
             <div className="max-w-lg">
               <h3 className="text-lightPrimaryColor text-xl font-bold sm:text-2xl">
-                Users
+                Users ({tableItems.length})
               </h3>
             </div>
 

@@ -2,6 +2,7 @@ export interface PartyInterface {
     id: string;
     date: Date;
     createdBy: string;
+    isClosed?: boolean;
 }
 
 export interface PartyInformationGoalInterface {

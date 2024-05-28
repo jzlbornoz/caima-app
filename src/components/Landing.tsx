@@ -76,15 +76,19 @@ const Landing = () => {
 
                   <div className="mt-2">
                     <div
-                      className={`flex items-center text-sm font-medium underline cursor-pointer ${
+                      className={`flex items-center text-sm font-medium cursor-pointer ${
                         party?.admissionApplications?.some(
                           (userId) => userId === $userInfo?.id
                         ) && "text-primaryColor"
                       }`}
                     >
-                      {party?.players?.some(
-                        (userId) => userId === $userInfo?.id
-                      ) ? (
+                      {party.isClosed ? (
+                        <span className="text-lightSecondaryColor font-bold">
+                          Caima finished
+                        </span>
+                      ) : party?.players?.some(
+                          (userId) => userId === $userInfo?.id
+                        ) ? (
                         <a href={`/party/${party.id}`}>You are participating</a>
                       ) : (
                         <span
@@ -106,25 +110,27 @@ const Landing = () => {
                             : "Request participation"}
                         </span>
                       )}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-3.5 w-3.5 ml-1"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
+                      {!party.isClosed && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3.5 w-3.5 ml-1"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           ))}
-          <UsersTable />
+          {$userInfo.isAdmin && <UsersTable />}
         </div>
       ) : (
         <>
