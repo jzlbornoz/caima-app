@@ -1,25 +1,32 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Firebase from "../../services/firebaseConnection/class";
-import type { PartyInformationInterface } from "../../typesDefs/party";
 import { AdmissionApplicationUsersList } from "../../components/AdmissionApplicationUsersList";
 import { PartyPlayersStats } from "../../components/PartyPlayersStats";
 
 // Define getStaticPaths to specify the paths Astro should generate
-export async function getStaticPaths() {
+/*export async function getStaticPaths() {
   const fb = await new Firebase();
   const res = await fb.getPartiesList();
 
+  console.log(
+    "==================RES+====================",
+    res.length,
+    res.map((item) => {
+      return { params: { id: item.id.toString() } };
+    })
+  );
+
   return res.map((item) => {
-    return { params: { id: item.id } };
+    return { params: { id: item.id.toString() } };
   });
-}
+}*/
 
 const { id } = Astro.params;
 ---
 
 <Layout title={`Caimas App | Caima`}>
-  <PartyPlayersStats client:load partyId={id} />
+  <PartyPlayersStats client:load partyId={id || ""} />
   <section
     class="max-w-screen-2xl mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl"
   >
