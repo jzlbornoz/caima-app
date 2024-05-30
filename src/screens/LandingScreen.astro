@@ -4,7 +4,7 @@ import { LogInForm } from "../components/LogInForm";
 ---
 
 <main class="w-full h-85vh flex flex-col items-center justify-center px-4">
-  <Landing client:load />
+  <Landing client:visible />
   <div class="max-w-sm w-full text-textColor" id="login" style="display: none">
     <div class="text-center">
       <div class="mt-5 space-y-2">
@@ -23,7 +23,7 @@ import { LogInForm } from "../components/LogInForm";
         </p>
       </div>
     </div>
-    <LogInForm client:load />
+    <LogInForm />
   </div>
 </main>
 
