@@ -1,9 +1,6 @@
 import { useStore } from "@nanostores/react";
-import { userInfo } from "../stores/userStore";
 import { Loader } from "./Loader";
-import type { PartyPlayerInterface } from "../typesDefs/party";
 import { partyDataStats } from "../stores/partyStore";
-import { useEffect } from "react";
 
 const PartyPlayersTable = () => {
   const $partyDataStats = useStore(partyDataStats);

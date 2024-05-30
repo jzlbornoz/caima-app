@@ -170,7 +170,7 @@ export async function getAdmissionApplicationsUsersListFunction(ids: string[]) {
         throw new Error('users not found');
     }
 
-    usersInformation.map((item, key) => {
+    usersInformation?.map((item, key) => {
         partyAdmissionList.setKey(
             item.id || key.toString(),
             item as UserInterface

@@ -1,8 +1,11 @@
+import { userInfo } from './../stores/userStore';
 export interface PartyInterface {
     id: string;
     date: Date;
     createdBy: string;
     isClosed?: boolean;
+    stats?: PartyInformationStatsInterface[]
+    players?: string[];
 }
 
 export interface PartyInformationGoalInterface {
@@ -30,4 +33,12 @@ export interface PartyInformationInterface extends PartyInterface {
 
 export interface PartyPlayerInterface extends UserInterface {
     stats: PartyInformationStatsInterface
+}
+
+export interface GeneralStatsInterface {
+    userData: UserInterface;
+    victory: number;
+    goals: number
+    partiesPlayed: number
+    id: string
 }

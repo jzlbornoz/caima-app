@@ -9,6 +9,7 @@ const PartyPlayersStats = ({ partyId }: { partyId: string }) => {
   const $userInfo = useStore(userInfo);
 
   useEffect(() => {
+    console.log("partyId", partyId);
     getPartyDataFunction(partyId);
   }, [partyId]);
 

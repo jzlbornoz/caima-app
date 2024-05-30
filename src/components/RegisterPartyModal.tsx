@@ -18,6 +18,8 @@ const RegisterPartyModal = () => {
     createPartyFunction({
       ...newPartyData,
       createdBy: $userInfo.id,
+      stats: [{ userId: $userInfo.id, goals: 0, victory: 0 }],
+      players: [$userInfo.id],
     });
   };
 
