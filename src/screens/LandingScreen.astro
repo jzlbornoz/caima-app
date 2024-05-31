@@ -1,11 +1,9 @@
 ---
-import Landing from "../components/Landing";
 import { LogInForm } from "../components/LogInForm";
 ---
 
 <main class="w-full h-85vh flex flex-col items-center justify-center px-4">
-  <Landing client:visible />
-  <div class="max-w-sm w-full text-textColor" id="login" style="display: none">
+  <div class="max-w-sm w-full text-textColor" id="login">
     <div class="text-center">
       <div class="mt-5 space-y-2">
         <h3 class="text-lightPrimaryColor text-2xl font-bold sm:text-3xl">
@@ -23,18 +21,6 @@ import { LogInForm } from "../components/LogInForm";
         </p>
       </div>
     </div>
-    <LogInForm />
+    <LogInForm client:load />
   </div>
 </main>
-
-<script>
-  import { userInfo } from "../stores/userStore";
-
-  // Listen to changes in the store, and show/hide the dialog accordingly
-  userInfo.subscribe((info) => {
-    const loginElement = document.getElementById("login");
-    if (info?.accessToken && loginElement) {
-      loginElement.style.display = "none";
-    }
-  });
-</script>

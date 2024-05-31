@@ -7,7 +7,7 @@ import { RegisterCaimaButton } from "./RegisterCaimaButton";
 import { PartiesList } from "./PartiesList";
 import { GeneralStatsTable } from "./GeneralStatsTable/GeneralStatsTable";
 
-const Landing = () => {
+const HomeComponent = () => {
   const $userInfo = useStore(userInfo);
   const $userInfoLoading = useStore(userInfoLoading);
 
@@ -21,14 +21,14 @@ const Landing = () => {
         <Loader />
       ) : (
         <div className="max-w-full w-full text-textColor">
-          {$userInfo.isAdmin && <RegisterCaimaButton />}
+          {$userInfo?.isAdmin && <RegisterCaimaButton />}
           <PartiesList />
           <GeneralStatsTable />
-          {$userInfo.isAdmin && <UsersTable />}
+          {$userInfo?.isAdmin && <UsersTable />}
         </div>
       )}
     </>
   );
 };
 
-export default Landing;
+export { HomeComponent };

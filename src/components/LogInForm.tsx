@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { logInUser, loginStatus } from "../stores/userStore";
+import { useEffect, useState } from "react";
+import { logInUser, loginStatus, userInfo } from "../stores/userStore";
 import { useStore } from "@nanostores/react";
 import { ErrorAlert } from "./ErrorAlert";
+import { navigate } from "astro/virtual-modules/transitions-router.js";
 
 const LogInForm = () => {
   const $loginStatus = useStore(loginStatus);
+  const $userInfo = useStore(userInfo);
 
   const [userLogin, setUserLogin] = useState({
     email: "",
@@ -14,6 +16,12 @@ const LogInForm = () => {
   const handleSubmit = () => {
     logInUser(userLogin.email, userLogin.password);
   };
+
+  useEffect(() => {
+    if ($loginStatus.status === "success" || $userInfo?.accessToken) {
+      navigate("/home");
+    }
+  }, [$loginStatus, $userInfo]);
 
   return (
     <form className="mt-8 space-y-5">
@@ -53,9 +61,6 @@ const LogInForm = () => {
       {$loginStatus.status === "error" && (
         <ErrorAlert error={$loginStatus.message} />
       )}
-      {/**<div className="text-center">
-        <a className="hover:text-lightPrimaryColor">Forgot password?</a>
-      </div> */}
     </form>
   );
 };

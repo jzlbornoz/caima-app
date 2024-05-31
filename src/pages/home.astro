@@ -1,0 +1,10 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { HomeComponent } from "../components/HomeComponent";
+---
+
+<Layout title="Caimas app | Home">
+  <main class="w-full h-85vh flex flex-col items-center justify-center px-4">
+    <HomeComponent client:load />
+  </main>
+</Layout>

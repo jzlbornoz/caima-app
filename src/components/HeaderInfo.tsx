@@ -11,11 +11,12 @@ const HeaderInfo = () => {
   }, []);
   return (
     <>
-      {$userInfo.name && (
+      {$userInfo?.name && (
         <span className="text-textColor w-full text-center">
           {$userInfo?.name}
         </span>
       )}
+
       <HeaderButtons />
     </>
   );

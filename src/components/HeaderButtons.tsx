@@ -6,7 +6,6 @@ import { admissionApplicationStatus, partyStatus } from "../stores/partyStore";
 const HeaderButtons = () => {
   const $userInfo = useStore(userInfo);
   const $userInfoLoading = useStore(userInfoLoading);
-
   const handleLogout = () => {
     logOutUser();
     admissionApplicationStatus.set({ status: "", message: "" });
