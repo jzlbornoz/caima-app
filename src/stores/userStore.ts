@@ -7,6 +7,7 @@ const fb = await new Firebase()
 export const userInfo = atom({} as UserInterface);
 export const userInfoLoading = atom(true);
 export const loginStatus = atom({ status: '', message: '' });
+export const registerStatus = atom({ status: '', message: '' });
 export const userList = map<Record<string, UserInterface>>({});
 /**
  * Retrieves the list of users from the Firebase service and updates the userList store.
@@ -38,7 +39,7 @@ export async function getUserList(): Promise<void> {
  */
 export async function addUserItem(data: UserInterface, password: string): Promise<void> {
     try {
-        loginStatus.set({ status: 'loading', message: 'Cargando...' })
+        registerStatus.set({ status: 'loading', message: 'Cargando...' })
         const newUser = await fb.registerUser(data, password)
         if (newUser) {
             userList.setKey(
@@ -48,7 +49,7 @@ export async function addUserItem(data: UserInterface, password: string): Promis
             loginStatus.set({ status: 'success', message: 'register success' })
         }
     } catch (error: any) {
-        loginStatus.set({
+        registerStatus.set({
             status: 'error',
             message: `Error: ${error.code}`,
         })

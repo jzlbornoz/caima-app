@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { addUserItem, loginStatus } from "../stores/userStore";
-import { navigate } from "astro/virtual-modules/transitions-router.js";
+import { addUserItem, loginStatus, registerStatus } from "../stores/userStore";
 import { useStore } from "@nanostores/react";
 import { ErrorAlert } from "./ErrorAlert";
 import { SuccessAlert } from "./SuccessAlert";
 
 const SignInForm = () => {
-  const $loginStatus = useStore(loginStatus);
+  const $registerStatus = useStore(registerStatus);
 
   const [newUserData, setNewUserData] = useState<UserInterface>(
       {} as UserInterface
@@ -83,13 +82,13 @@ const SignInForm = () => {
         onClick={handleSubmit}
         type="button"
       >
-        {$loginStatus.status === "loading" ? "Loading..." : "Register"}
+        {$registerStatus.status === "loading" ? "Loading..." : "Register"}
       </button>
       {formError && <ErrorAlert error={formError} />}
-      {$loginStatus.status === "error" && (
-        <ErrorAlert error={$loginStatus.message} />
+      {$registerStatus.status === "error" && (
+        <ErrorAlert error={$registerStatus.message} />
       )}
-      {$loginStatus.status === "success" && (
+      {$registerStatus.status === "success" && (
         <SuccessAlert message="Register success. You can now log in" url="/" />
       )}
     </form>

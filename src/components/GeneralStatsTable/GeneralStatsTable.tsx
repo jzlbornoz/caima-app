@@ -3,14 +3,19 @@ import type { GeneralStatsInterface } from "../../typesDefs/party";
 import { CustomDataTable } from "../CustomDataTable";
 import { generalStatsTableColumns } from "./helpers/generalStatsTableColumns";
 import { useStore } from "@nanostores/react";
-import { partyList } from "../../stores/partyStore";
-import { userList } from "../../stores/userStore";
+import { getPartiesListFunction, partyList } from "../../stores/partyStore";
+import { getUserList, userList } from "../../stores/userStore";
 
 const GeneralStatsTable = () => {
   const [playersData, setPlayersData] = useState<GeneralStatsInterface[]>([]);
 
   const $userList = useStore(userList);
   const $partyList = useStore(partyList);
+
+  useEffect(() => {
+    getUserList();
+    getPartiesListFunction();
+  }, []);
 
   useEffect(() => {
     if ($partyList) {
