@@ -5,6 +5,7 @@ import { generalStatsTableColumns } from "./helpers/generalStatsTableColumns";
 import { useStore } from "@nanostores/react";
 import { getPartiesListFunction, partyList } from "../../stores/partyStore";
 import { getUserList, userList } from "../../stores/userStore";
+import { Loader } from "../Loader";
 
 const GeneralStatsTable = () => {
   const [playersData, setPlayersData] = useState<GeneralStatsInterface[]>([]);
@@ -54,23 +55,25 @@ const GeneralStatsTable = () => {
 
   return (
     <>
-      {playersData.length > 0 && (
-        <div className="max-w-screen-2xl mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl">
-          <div className="items-center justify-between flex">
-            <div className="max-w-lg">
-              <h3 className="text-lightPrimaryColor text-xl font-bold sm:text-2xl">
-                Global Stats
-              </h3>
-            </div>
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl">
+        <div className="items-center justify-between flex">
+          <div className="max-w-lg">
+            <h3 className="text-lightPrimaryColor text-xl font-bold sm:text-2xl">
+              Global Stats
+            </h3>
           </div>
+        </div>
+        {playersData.length < 1 ? (
+          <Loader />
+        ) : (
           <div className="mt-12 relative h-max overflow-auto">
             <CustomDataTable
               columns={generalStatsTableColumns()}
               data={playersData}
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 };

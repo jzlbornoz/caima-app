@@ -7,6 +7,7 @@ export const partyList = map<Record<string, PartyInformationInterface>>({});
 export const partyAdmissionList = map<Record<string, UserInterface>>({});
 export const partyDataStats = atom({} as PartyInformationInterface);
 export const partyStatus = atom({ status: '', message: '' });
+export const isLoadingPartyList = atom(true)
 export const admissionApplicationStatus = atom({ status: '', message: '' });
 
 export async function createPartyFunction(data: PartyInterface): Promise<void> {
@@ -35,8 +36,9 @@ export async function getPartiesListFunction(): Promise<void> {
                 item as PartyInformationInterface
             );
         });
-
+        isLoadingPartyList.set(false)
     } catch (error: any) {
+        isLoadingPartyList.set(false)
         partyStatus.set({
             status: 'error',
             message: `Error: ${error.code}`,
@@ -79,9 +81,9 @@ export async function acceptAdmissionApplicationFunction(partyData: PartyInforma
         status: 'loading',
         message: `Accepting user...`,
     })
-    console.log('e')
+
     try {
-        console.log('trying', partyData, userIdToAccept)
+
         const newAdmissionApplications = partyData?.admissionApplications?.filter(userId => userId !== userIdToAccept)
         const newPlayers = partyData?.players ? [...partyData?.players, userIdToAccept] : [userIdToAccept]
         const updatedParty = await fb.updateParty(partyData, {
@@ -100,12 +102,6 @@ export async function acceptAdmissionApplicationFunction(partyData: PartyInforma
             }
         );
 
-        console.log('AAAA', {
-            ...partyData,
-            admissionApplications: newAdmissionApplications,
-            players: newPlayers,
-            stats: [...partyData.stats, { userId: userIdToAccept, goals: 0, victory: 0 }]
-        })
         admissionApplicationStatus.set({
             status: 'success',
             message: `User accepted successfully.`,
