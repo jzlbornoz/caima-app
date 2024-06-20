@@ -63,7 +63,7 @@ const PartiesList = () => {
                       className={`flex items-center text-sm font-medium cursor-pointer ${
                         party?.admissionApplications?.some(
                           (userId) => userId === $userInfo?.id
-                        ) && "text-primaryColor"
+                        ) && "text-green-400"
                       }`}
                     >
                       {party.isClosed ? (

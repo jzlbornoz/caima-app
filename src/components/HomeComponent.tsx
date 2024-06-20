@@ -6,7 +6,6 @@ import { Loader } from "./Loader";
 import { RegisterCaimaButton } from "./RegisterCaimaButton";
 import { PartiesList } from "./PartiesList";
 import { GeneralStatsTable } from "./GeneralStatsTable/GeneralStatsTable";
-import { isLoadingPartyList } from "../stores/partyStore";
 
 const HomeComponent = () => {
   const $userInfo = useStore(userInfo);
@@ -23,8 +22,8 @@ const HomeComponent = () => {
       ) : (
         <div className="max-w-full w-full text-textColor">
           {$userInfo?.isAdmin && <RegisterCaimaButton />}
-          <PartiesList />
           <GeneralStatsTable />
+          <PartiesList />
           {$userInfo?.isAdmin && <UsersTable />}
         </div>
       )}

@@ -59,6 +59,9 @@ const CustomDataTable = ({
   }, [data, sortConfig]);
 
   useEffect(() => {
+    requestSort("goals");
+  }, [])
+  useEffect(() => {
     if (sortedData) {
       setTableData(sortedData);
     }
@@ -81,19 +84,19 @@ const CustomDataTable = ({
               className="py-3 text-center cursor-pointer"
               onClick={() => requestSort("goals")}
             >
-              Goals
+              G
             </th>
             <th
               className="py-3 text-center  cursor-pointer"
               onClick={() => requestSort("victory")}
             >
-              Victories
+              V
             </th>
             <th
               className="py-3 text-center  cursor-pointer"
               onClick={() => requestSort("partiesPlayed")}
             >
-              Parties
+              P
             </th>
             <th className="py-3 text-center">G/P</th>
             <th className="py-3 text-center">V/P</th>
@@ -109,23 +112,23 @@ const CustomDataTable = ({
                   : "bg-backgroundColor hover:bg-gray-800"
               }
             >
-              <td className="pr-6 pl-4 py-4 border-r border-gray-200">
+              <td className="pr-6 pl-4 py-4 border-gray-200">
                 {item?.userData?.name}
               </td>
-              <td className="py-3  text-center border-r border-gray-200">
+              <td className="py-3  text-center w-10 border-gray-200">
                 {item.goals}
               </td>
-              <td className=" py-4 text-center border-r border-gray-200">
+              <td className=" py-4 text-center w-10 border-gray-200">
                 {item.victory}
               </td>
-              <td className=" py-4 text-center border-r border-gray-200">
+              <td className=" py-4 text-center w-10 border-gray-200">
                 {item.partiesPlayed}
               </td>
-              <td className=" py-4 text-center border-r border-gray-200">
-                {(item.goals / item.partiesPlayed).toFixed(2)}
+              <td className=" py-4 text-center w-10 border-gray-200">
+                {(item.goals / item.partiesPlayed).toFixed(1)}
               </td>
-              <td className=" py-4 text-center">
-                {(item.victory / item.partiesPlayed).toFixed(2)}
+              <td className=" py-4 text-center w-10">
+                {(item.victory / item.partiesPlayed).toFixed(1)}
               </td>
             </tr>
           ))}

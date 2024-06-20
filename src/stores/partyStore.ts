@@ -30,7 +30,7 @@ export async function createPartyFunction(data: PartyInterface): Promise<void> {
 export async function getPartiesListFunction(): Promise<void> {
     try {
         const res = await fb.getPartiesList();
-        res.map((item, key) => {
+        res.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((item, key) => {
             partyList.setKey(
                 item.id || key.toString(),
                 item as PartyInformationInterface
