@@ -9,7 +9,7 @@ const { id } = Astro.params;
 <Layout title={`Caimas App | Caima`}>
   <PartyPlayersStats client:load partyId={id || ""} />
   <section
-    class="max-w-screen-2xl mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl"
+    class="max-w-screen-2xl md:mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl mx-2"
   >
     <span class="text-titleColor text-2xl">Users Requests</span>
     <AdmissionApplicationUsersList client:load />

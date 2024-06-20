@@ -9,6 +9,7 @@ export const partyDataStats = atom({} as PartyInformationInterface);
 export const partyStatus = atom({ status: '', message: '' });
 export const isLoadingPartyList = atom(true)
 export const admissionApplicationStatus = atom({ status: '', message: '' });
+export const closePartyStatus = atom({ status: '', message: '' });
 
 export async function createPartyFunction(data: PartyInterface): Promise<void> {
     try {
@@ -109,6 +110,32 @@ export async function acceptAdmissionApplicationFunction(partyData: PartyInforma
         return updatedParty
     } catch (error: any) {
         partyStatus.set({
+            status: 'error',
+            message: `Error: ${error.code}`,
+        })
+    }
+}
+
+export async function closePartyFunction(partyData: PartyInformationInterface) {
+    try {
+        closePartyStatus.set({
+            status: 'loading',
+            message: `Cerrando caima...`,
+        })
+
+        const updatedParty = await fb.updateParty(partyData, { ...partyData, isClosed: true })
+        partyList.setKey(
+            partyData.id,
+            { ...partyData, isClosed: true }
+        );
+
+        closePartyStatus.set({
+            status: 'success',
+            message: `Caima cerrada correctamente.`,
+        })
+        return updatedParty
+    } catch (error: any) {
+        closePartyStatus.set({
             status: 'error',
             message: `Error: ${error.code}`,
         })

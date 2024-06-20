@@ -60,7 +60,7 @@ const CustomDataTable = ({
 
   useEffect(() => {
     requestSort("goals");
-  }, [])
+  }, []);
   useEffect(() => {
     if (sortedData) {
       setTableData(sortedData);
@@ -96,10 +96,10 @@ const CustomDataTable = ({
               className="py-3 text-center  cursor-pointer"
               onClick={() => requestSort("partiesPlayed")}
             >
-              P
+              C
             </th>
-            <th className="py-3 text-center">G/P</th>
-            <th className="py-3 text-center">V/P</th>
+            <th className="py-3 text-center">G/C</th>
+            <th className="py-3 text-center">V/C</th>
           </tr>
         </thead>
         <tbody className="text-textColor divide-y divide-gray-200">

@@ -3,13 +3,19 @@ import { PartyStatsList } from "./PartyStatsList";
 import { useStore } from "@nanostores/react";
 import { userInfo } from "../stores/userStore";
 import { useEffect } from "react";
-import { getPartyDataFunction } from "../stores/partyStore";
+import {
+  getPartyDataFunction,
+  closePartyFunction,
+  partyDataStats,
+  closePartyStatus,
+} from "../stores/partyStore";
 
 const PartyPlayersStats = ({ partyId }: { partyId: string }) => {
   const $userInfo = useStore(userInfo);
+  const $partyDataStats = useStore(partyDataStats);
+  const $closePartyStatus = useStore(closePartyStatus);
 
   useEffect(() => {
-    console.log("partyId", partyId);
     getPartyDataFunction(partyId);
   }, [partyId]);
 
@@ -24,6 +30,20 @@ const PartyPlayersStats = ({ partyId }: { partyId: string }) => {
           <span className="text-titleColor text-2xl">Goals and Victories</span>
           <PartyStatsList />
         </section>
+      )}
+      {!$partyDataStats.isClosed && $userInfo.isAdmin && (
+        <div
+          onClick={() =>
+            $userInfo.isAdmin &&
+            $closePartyStatus.status !== "loading" &&
+            closePartyFunction($partyDataStats)
+          }
+          className="mx-2 md:mx-auto rounded-md bg-lightPrimaryColor hover:bg-primaryColor px-5 mt-8 py-2.5 text-xl font-medium text-backgroundColor hover:text-titleColor shadow text-center"
+        >
+          {$closePartyStatus.message
+            ? $closePartyStatus.message
+            : "Close Caima"}
+        </div>
       )}
     </>
   );
