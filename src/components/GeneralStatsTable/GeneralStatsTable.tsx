@@ -49,7 +49,7 @@ const GeneralStatsTable = () => {
         };
       });
 
-      setPlayersData(playersData.filter((item) => item.partiesPlayed > 0));
+      setPlayersData(playersData.filter((item) => item.partiesPlayed > 1));
     }
   }, [$partyList, $userList]);
 

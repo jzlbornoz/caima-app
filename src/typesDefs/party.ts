@@ -29,6 +29,7 @@ export interface PartyInformationInterface extends PartyInterface {
     victories: PartyInformationVictoryInterface[];
     admissionApplications: string[];
     stats: PartyInformationStatsInterface[]
+    collaborators: string[]
 }
 
 export interface PartyPlayerInterface extends UserInterface {

@@ -159,6 +159,30 @@ export async function registerGoalsFunction(partyData: PartyInformationInterface
     }
 }
 
+export async function updateCollaboratorsListFunction(partyData: PartyInformationInterface, collaborator: string): Promise<void> {
+    try {
+        const collaboratorsList = partyData?.collaborators
+            ? partyData?.collaborators?.includes(collaborator)
+                ? partyData?.collaborators?.filter(collaboratorId => collaboratorId !== collaborator)
+                : [...partyData?.collaborators, collaborator]
+            : [collaborator]
+
+        const updatedParty = await fb.updateParty(partyData, { ...partyData, collaborators: collaboratorsList })
+        partyList.setKey(
+            partyData.id,
+            { ...partyData, collaborators: collaboratorsList }
+        );
+        
+        return updatedParty
+    } catch (error: any) {
+        partyStatus.set({
+            status: 'error',
+            message: `Error: ${error.code}`,
+        })
+    }
+}
+
+
 export async function getPartyDataFunction(id: string) {
     const partyInformation = await fb.getPartyById(id) as PartyInformationInterface;
     if (!partyInformation) {
@@ -182,7 +206,7 @@ export async function getPartyDataFunction(id: string) {
 }
 export async function getPartyPlayersDataFunction(playersIds: string[]) {
     const res = await Promise.all(
-        playersIds.map(async (playerId) => await fb.getUserFromId(playerId))
+        playersIds?.map(async (playerId) => await fb.getUserFromId(playerId))
     );
 
     return res as UserInterface[];

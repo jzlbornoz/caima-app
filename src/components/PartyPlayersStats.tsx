@@ -25,7 +25,9 @@ const PartyPlayersStats = ({ partyId }: { partyId: string }) => {
         <span className="text-titleColor text-2xl">Caima players</span>
         <PartyPlayersTable />
       </section>
-      {$userInfo.isAdmin && (
+      {($userInfo.isAdmin ||
+        ($partyDataStats?.collaborators?.includes($userInfo.id) &&
+          !$partyDataStats?.isClosed)) && (
         <section className="max-w-screen-2xl md:mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl mx-2">
           <span className="text-titleColor text-2xl">Goals and Victories</span>
           <PartyStatsList />
