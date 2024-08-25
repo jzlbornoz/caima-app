@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { HeaderButtons } from "./HeaderButtons";
 import { getAccessToken, userInfo } from "../stores/userStore";
 import { useStore } from "@nanostores/react";

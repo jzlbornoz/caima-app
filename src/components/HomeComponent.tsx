@@ -1,7 +1,7 @@
+import { useEffect } from "react";
 import { useStore } from "@nanostores/react";
 import { getAccessToken, userInfo, userInfoLoading } from "../stores/userStore";
 import UsersTable from "./UsersTable";
-import { useEffect } from "react";
 import { Loader } from "./Loader";
 import { RegisterCaimaButton } from "./RegisterCaimaButton";
 import { PartiesList } from "./PartiesList";
@@ -14,6 +14,11 @@ const HomeComponent = () => {
   useEffect(() => {
     getAccessToken();
   }, []);
+  useEffect(() => {
+    if (!$userInfo) {
+      window.location.href = "/";
+    }
+  }, [$userInfo]);
 
   return (
     <>

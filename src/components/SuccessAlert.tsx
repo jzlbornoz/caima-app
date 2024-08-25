@@ -3,7 +3,7 @@ const SuccessAlert = ({
   url,
   header,
 }: {
-  message: string;
+  message?: string;
   url?: string;
   header?: string;
 }) => {
