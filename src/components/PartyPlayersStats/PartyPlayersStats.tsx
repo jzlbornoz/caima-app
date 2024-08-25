@@ -18,10 +18,11 @@ const PartyPlayersStats = ({ partyId }: { partyId: string }) => {
   const $closePartyStatus = useStore(closePartyStatus);
 
   useEffect(() => {
-    getPartyDataFunction(partyId).then((data) => {
-      setPartyData(data);
-      console.log(data);
-    });
+    if (partyId) {
+      getPartyDataFunction(partyId).then((data) => {
+        setPartyData(data);
+      });
+    }
   }, [partyId]);
 
   return (
@@ -33,11 +34,11 @@ const PartyPlayersStats = ({ partyId }: { partyId: string }) => {
       {($userInfo.isAdmin ||
         ($partyDataStats?.collaborators?.includes($userInfo.id) &&
           !$partyDataStats?.isClosed)) && (
-          <section className="max-w-screen-2xl md:mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl mx-2">
-            <span className="text-titleColor text-2xl">Goals and Victories</span>
-            <PartyStatsList />
-          </section>
-        )}
+        <section className="max-w-screen-2xl md:mx-auto px-4 md:px-8 bg-secondBackgroundColor mt-8 p-4 rounded-xl mx-2">
+          <span className="text-titleColor text-2xl">Goals and Victories</span>
+          <PartyStatsList />
+        </section>
+      )}
       {!$partyDataStats.isClosed && $userInfo.isAdmin && (
         <div
           onClick={() =>

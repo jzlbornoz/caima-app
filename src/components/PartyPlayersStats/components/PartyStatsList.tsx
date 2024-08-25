@@ -65,7 +65,7 @@ const PartyStatsList = () => {
         </div>
       </li>
       {$partyDataStats?.stats?.map((item, idx) => (
-        <li className="py-5 flex items-center justify-around">
+        <li className="py-5 flex items-center justify-around" key={idx}>
           <span className="block text-sm text-lightPrimaryColor font-extrabold w-1/5 overflow-hidden">
             {item?.user?.userName}
           </span>

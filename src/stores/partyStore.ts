@@ -218,6 +218,7 @@ export async function updateCollaboratorsListFunction(
 }
 
 export async function getPartyDataFunction(id: string) {
+    partyAdmissionList.set({});
     const partyInformation = (await fb.getPartyById(
         id
     )) as PartyInformationInterface;
@@ -275,13 +276,16 @@ export async function deletePlayerToPartyFunction(
 }
 
 export async function getPartyPlayersDataFunction(playersIds: string[]) {
-    const res = await Promise.all(
-        playersIds?.map(async (playerId) => await fb.getUserFromId(playerId))
-    );
+    if (playersIds) {
+        const res = await Promise.all(
+            playersIds?.map(async (playerId) => await fb.getUserFromId(playerId))
+        );
 
-    return res as UserInterface[];
+        return res as UserInterface[];
+    }
 }
 export async function getAdmissionApplicationsUsersListFunction(ids: string[]) {
+    partyAdmissionList.set({});
     const usersInformation = await getPartyPlayersDataFunction(ids);
     if (!usersInformation) {
         throw new Error("users not found");

@@ -21,6 +21,8 @@ const PartiesList = () => {
   const [partyListData, setPartyListData] = useState<
     PartyInformationInterface[]
   >([]);
+  const [partyResquestingAdmissionId, setPartyResquestingAdmissionId] =
+    useState<string>("");
 
   useEffect(() => {
     getAccessToken();
@@ -35,6 +37,7 @@ const PartiesList = () => {
   }, [$partyList]);
 
   const handleAdmissionApplication = (party: PartyInformationInterface) => {
+    setPartyResquestingAdmissionId(party.id);
     registerAdmissionApplications(party, $userInfo.id);
   };
 
@@ -85,7 +88,8 @@ const PartiesList = () => {
                               handleAdmissionApplication(party);
                           }}
                         >
-                          {$admissionApplicationStatus.status
+                          {$admissionApplicationStatus.status &&
+                          partyResquestingAdmissionId === party.id
                             ? `${$admissionApplicationStatus.message}`
                             : party?.admissionApplications?.some(
                                 (userId) => userId === $userInfo?.id
