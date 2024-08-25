@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import type { GeneralStatsInterface } from "../typesDefs/party";
-import type { SortConfig } from "../typesDefs/table";
+import type { GeneralStatsInterface } from "../../../typesDefs/party";
+import type { SortConfig } from "../../../typesDefs/table";
 
 const CustomDataTable = ({
   data,
@@ -99,6 +99,7 @@ const CustomDataTable = ({
               C
             </th>
             <th className="py-3 text-center">G/C</th>
+            <th className="py-3 text-center">IpV</th>
             <th className="py-3 text-center">V/C</th>
           </tr>
         </thead>
@@ -124,8 +125,12 @@ const CustomDataTable = ({
               <td className=" py-4 text-center w-10 border-gray-200">
                 {item.partiesPlayed}
               </td>
+
               <td className=" py-4 text-center w-10 border-gray-200">
                 {(item.goals / item.partiesPlayed).toFixed(1)}
+              </td>
+              <td className=" py-4 text-center w-10 border-gray-200">
+                {(item.goals / item.victory).toFixed(1)}
               </td>
               <td className=" py-4 text-center w-10">
                 {(item.victory / item.partiesPlayed).toFixed(1)}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { GeneralStatsInterface } from "../../typesDefs/party";
-import { CustomDataTable } from "../CustomDataTable";
+import { CustomDataTable } from "./components/CustomDataTable";
 import { generalStatsTableColumns } from "./helpers/generalStatsTableColumns";
 import { useStore } from "@nanostores/react";
 import { getPartiesListFunction, partyList } from "../../stores/partyStore";

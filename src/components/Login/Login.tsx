@@ -11,7 +11,7 @@ import { navigate } from "astro/virtual-modules/transitions-router.js";
 import { SendRecoveryPasswordButton } from "./components/SendRecoveryPasswordButton";
 import { SuccessAlert } from "../SuccessAlert";
 
-const LogInForm = () => {
+const Login = () => {
   const $loginStatus = useStore(loginStatus);
   const $sendEmailRecoveryStatus = useStore(sendResetPasswordStatus);
   const $userInfo = useStore(userInfo);
@@ -84,4 +84,4 @@ const LogInForm = () => {
   );
 };
 
-export { LogInForm };
+export { Login };

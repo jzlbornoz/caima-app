@@ -3,9 +3,9 @@ import {
   partyDataStats,
   registerGoalsFunction,
   updateCollaboratorsListFunction,
-} from "../stores/partyStore";
+} from "../../../stores/partyStore";
 import { useEffect, useState } from "react";
-import { userInfo } from "../stores/userStore";
+import { userInfo } from "../../../stores/userStore";
 
 const PartyStatsList = () => {
   const $partyDataStats = useStore(partyDataStats);

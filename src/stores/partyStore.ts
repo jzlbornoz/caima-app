@@ -1,209 +1,279 @@
 import { atom, map } from "nanostores";
 import Firebase from "../services/firebaseConnection/class";
-import type { PartyInformationGoalInterface, PartyInformationInterface, PartyInformationStatsInterface, PartyInterface } from "../typesDefs/party";
+import type {
+    PartyInformationGoalInterface,
+    PartyInformationInterface,
+    PartyInformationStatsInterface,
+    PartyInterface,
+} from "../typesDefs/party";
 
-const fb = await new Firebase()
+const fb = await new Firebase();
 export const partyList = map<Record<string, PartyInformationInterface>>({});
 export const partyAdmissionList = map<Record<string, UserInterface>>({});
 export const partyDataStats = atom({} as PartyInformationInterface);
-export const partyStatus = atom({ status: '', message: '' });
-export const isLoadingPartyList = atom(true)
-export const admissionApplicationStatus = atom({ status: '', message: '' });
-export const closePartyStatus = atom({ status: '', message: '' });
+export const partyStatus = atom({ status: "", message: "" });
+export const isLoadingPartyList = atom(true);
+export const admissionApplicationStatus = atom({ status: "", message: "" });
+export const closePartyStatus = atom({ status: "", message: "" });
 
 export async function createPartyFunction(data: PartyInterface): Promise<void> {
     try {
-        const newParty = await fb.registerParty(data)
+        const newParty = await fb.registerParty(data);
         if (newParty) {
-            partyList.setKey(
-                newParty,
-                { ...data, id: newParty } as PartyInformationInterface
-            );
+            partyList.setKey(newParty, {
+                ...data,
+                id: newParty,
+            } as PartyInformationInterface);
         }
     } catch (error: any) {
         partyStatus.set({
-            status: 'error',
+            status: "error",
             message: `Error: ${error.code}`,
-        })
+        });
     }
 }
 
 export async function getPartiesListFunction(): Promise<void> {
     try {
         const res = await fb.getPartiesList();
-        res.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((item, key) => {
-            partyList.setKey(
-                item.id || key.toString(),
-                item as PartyInformationInterface
-            );
-        });
-        isLoadingPartyList.set(false)
+        res
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .map((item, key) => {
+                partyList.setKey(
+                    item.id || key.toString(),
+                    item as PartyInformationInterface
+                );
+            });
+        isLoadingPartyList.set(false);
     } catch (error: any) {
-        isLoadingPartyList.set(false)
+        isLoadingPartyList.set(false);
         partyStatus.set({
-            status: 'error',
+            status: "error",
             message: `Error: ${error.code}`,
-        })
+        });
     }
 }
 
-export async function registerAdmissionApplications(partyData: PartyInformationInterface, newUserId: string) {
-
-    if (partyData?.admissionApplications?.some(userId => userId === newUserId)) {
-        throw new Error('Application already sent');
+export async function registerAdmissionApplications(
+    partyData: PartyInformationInterface,
+    newUserId: string
+) {
+    if (
+        partyData?.admissionApplications?.some((userId) => userId === newUserId)
+    ) {
+        throw new Error("Application already sent");
     }
     admissionApplicationStatus.set({
-        status: 'loading',
+        status: "loading",
         message: `Sending application...`,
-    })
+    });
     try {
-        const newAdmissionApplications = partyData?.admissionApplications?.length ? [...partyData?.admissionApplications, newUserId] : [newUserId]
-        const updatedParty = await fb.updateParty(partyData, { ...partyData, admissionApplications: newAdmissionApplications })
-        partyList.setKey(
-            partyData.id,
-            { ...partyData, admissionApplications: newAdmissionApplications }
-        );
+        const newAdmissionApplications = partyData?.admissionApplications?.length
+            ? [...partyData?.admissionApplications, newUserId]
+            : [newUserId];
+        const updatedParty = await fb.updateParty(partyData, {
+            ...partyData,
+            admissionApplications: newAdmissionApplications,
+        });
+        partyList.setKey(partyData.id, {
+            ...partyData,
+            admissionApplications: newAdmissionApplications,
+        });
         admissionApplicationStatus.set({
-            status: 'success',
+            status: "success",
             message: `Application sent successfully. Waiting for approval...`,
-        })
-        return updatedParty
+        });
+        return updatedParty;
     } catch (error: any) {
-
         admissionApplicationStatus.set({
-            status: 'error',
+            status: "error",
             message: `Error: ${error.code}`,
-        })
+        });
     }
 }
 
-export async function acceptAdmissionApplicationFunction(partyData: PartyInformationInterface, userIdToAccept: string): Promise<void> {
+export async function acceptAdmissionApplicationFunction(
+    partyData: PartyInformationInterface,
+    userIdToAccept: string
+): Promise<void> {
     admissionApplicationStatus.set({
-        status: 'loading',
+        status: "loading",
         message: `Accepting user...`,
-    })
+    });
 
     try {
-
-        const newAdmissionApplications = partyData?.admissionApplications?.filter(userId => userId !== userIdToAccept)
-        const newPlayers = partyData?.players ? [...partyData?.players, userIdToAccept] : [userIdToAccept]
+        const newAdmissionApplications = partyData?.admissionApplications?.filter(
+            (userId) => userId !== userIdToAccept
+        );
+        const newPlayers = partyData?.players
+            ? [...partyData?.players, userIdToAccept]
+            : [userIdToAccept];
         const updatedParty = await fb.updateParty(partyData, {
             ...partyData,
             admissionApplications: newAdmissionApplications,
             players: newPlayers,
-            stats: [...partyData.stats, { userId: userIdToAccept, goals: 0, victory: 0 }]
-        })
-        partyList.setKey(
-            partyData.id,
-            {
-                ...partyData,
-                admissionApplications: newAdmissionApplications,
-                players: newPlayers,
-                stats: [...partyData.stats, { userId: userIdToAccept, goals: 0, victory: 0 }]
-            }
-        );
+            stats: [
+                ...partyData.stats,
+                { userId: userIdToAccept, goals: 0, victory: 0 },
+            ],
+        });
+        partyList.setKey(partyData.id, {
+            ...partyData,
+            admissionApplications: newAdmissionApplications,
+            players: newPlayers,
+            stats: [
+                ...partyData.stats,
+                { userId: userIdToAccept, goals: 0, victory: 0 },
+            ],
+        });
 
         admissionApplicationStatus.set({
-            status: 'success',
+            status: "success",
             message: `User accepted successfully.`,
-        })
-        return updatedParty
+        });
+        return updatedParty;
     } catch (error: any) {
         partyStatus.set({
-            status: 'error',
+            status: "error",
             message: `Error: ${error.code}`,
-        })
+        });
     }
 }
 
 export async function closePartyFunction(partyData: PartyInformationInterface) {
     try {
         closePartyStatus.set({
-            status: 'loading',
+            status: "loading",
             message: `Cerrando caima...`,
-        })
+        });
 
-        const updatedParty = await fb.updateParty(partyData, { ...partyData, isClosed: true })
-        partyList.setKey(
-            partyData.id,
-            { ...partyData, isClosed: true }
-        );
+        const updatedParty = await fb.updateParty(partyData, {
+            ...partyData,
+            isClosed: true,
+        });
+        partyList.setKey(partyData.id, { ...partyData, isClosed: true });
 
         closePartyStatus.set({
-            status: 'success',
+            status: "success",
             message: `Caima cerrada correctamente.`,
-        })
-        return updatedParty
+        });
+        return updatedParty;
     } catch (error: any) {
         closePartyStatus.set({
-            status: 'error',
+            status: "error",
             message: `Error: ${error.code}`,
-        })
+        });
     }
 }
 
-export async function registerGoalsFunction(partyData: PartyInformationInterface, partyStats: PartyInformationStatsInterface[]): Promise<void> {
+export async function registerGoalsFunction(
+    partyData: PartyInformationInterface,
+    partyStats: PartyInformationStatsInterface[]
+): Promise<void> {
     try {
-        const updatedParty = await fb.updateParty(partyData, { ...partyData, stats: partyStats })
-        partyList.setKey(
-            partyData.id,
-            { ...partyData, stats: partyStats }
-        );
+        const updatedParty = await fb.updateParty(partyData, {
+            ...partyData,
+            stats: partyStats,
+        });
+        partyList.setKey(partyData.id, { ...partyData, stats: partyStats });
 
-        return updatedParty
+        return updatedParty;
     } catch (error: any) {
         partyStatus.set({
-            status: 'error',
+            status: "error",
             message: `Error: ${error.code}`,
-        })
+        });
     }
 }
 
-export async function updateCollaboratorsListFunction(partyData: PartyInformationInterface, collaborator: string): Promise<void> {
+export async function updateCollaboratorsListFunction(
+    partyData: PartyInformationInterface,
+    collaborator: string
+): Promise<void> {
     try {
         const collaboratorsList = partyData?.collaborators
             ? partyData?.collaborators?.includes(collaborator)
-                ? partyData?.collaborators?.filter(collaboratorId => collaboratorId !== collaborator)
+                ? partyData?.collaborators?.filter(
+                    (collaboratorId) => collaboratorId !== collaborator
+                )
                 : [...partyData?.collaborators, collaborator]
-            : [collaborator]
+            : [collaborator];
 
-        const updatedParty = await fb.updateParty(partyData, { ...partyData, collaborators: collaboratorsList })
-        partyList.setKey(
-            partyData.id,
-            { ...partyData, collaborators: collaboratorsList }
-        );
-        
-        return updatedParty
+        const updatedParty = await fb.updateParty(partyData, {
+            ...partyData,
+            collaborators: collaboratorsList,
+        });
+        partyList.setKey(partyData.id, {
+            ...partyData,
+            collaborators: collaboratorsList,
+        });
+
+        return updatedParty;
     } catch (error: any) {
         partyStatus.set({
-            status: 'error',
+            status: "error",
             message: `Error: ${error.code}`,
-        })
+        });
     }
 }
-
 
 export async function getPartyDataFunction(id: string) {
-    const partyInformation = await fb.getPartyById(id) as PartyInformationInterface;
+    const partyInformation = (await fb.getPartyById(
+        id
+    )) as PartyInformationInterface;
     if (!partyInformation) {
-        throw new Error('Party not found');
+        throw new Error("Party not found");
     }
-    const usersInformation = await getPartyPlayersDataFunction(partyInformation.players);
+    const usersInformation = await getPartyPlayersDataFunction(
+        partyInformation.players
+    );
     if (!usersInformation) {
-        throw new Error('users not found');
+        throw new Error("users not found");
     }
 
-    const statsWithInformation = partyInformation.stats.map(stat => {
-        const user = usersInformation.find(user => user.id === stat.userId);
+    const statsWithInformation = partyInformation.stats.map((stat) => {
+        const user = usersInformation.find((user) => user.id === stat.userId);
         if (!user) {
-            throw new Error('user not found');
+            throw new Error("user not found");
         }
-        return { ...stat, user: user }
-    })
+        return { ...stat, user: user };
+    });
 
-    partyDataStats.set({ ...partyInformation, stats: statsWithInformation })
-    return { ...partyInformation, stats: statsWithInformation }
+    partyDataStats.set({ ...partyInformation, stats: statsWithInformation });
+    return partyInformation;
 }
+
+export async function deletePlayerToPartyFunction(
+    partyData: PartyInformationInterface,
+    playerId: string
+) {
+    try {
+        const newPlayers = partyData?.players?.filter(
+            (player) => player !== playerId
+        );
+        const newStats = partyData?.stats?.filter(
+            (player) => player.userId !== playerId
+        );
+
+        const updatedParty = await fb.updateParty(partyData, {
+            ...partyData,
+            players: newPlayers,
+            stats: newStats,
+        });
+        partyList.setKey(partyData.id, {
+            ...partyData,
+            players: newPlayers,
+            stats: newStats,
+        });
+        return true;
+    } catch (error: any) {
+        partyStatus.set({
+            status: "error",
+            message: `Error: ${error.code}`,
+        });
+    }
+}
+
 export async function getPartyPlayersDataFunction(playersIds: string[]) {
     const res = await Promise.all(
         playersIds?.map(async (playerId) => await fb.getUserFromId(playerId))
@@ -214,16 +284,12 @@ export async function getPartyPlayersDataFunction(playersIds: string[]) {
 export async function getAdmissionApplicationsUsersListFunction(ids: string[]) {
     const usersInformation = await getPartyPlayersDataFunction(ids);
     if (!usersInformation) {
-        throw new Error('users not found');
+        throw new Error("users not found");
     }
 
     usersInformation?.map((item, key) => {
-        partyAdmissionList.setKey(
-            item.id || key.toString(),
-            item as UserInterface
-        );
+        partyAdmissionList.setKey(item.id || key.toString(), item as UserInterface);
     });
 
-
-    return usersInformation
+    return usersInformation;
 }
