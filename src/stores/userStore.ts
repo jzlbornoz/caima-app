@@ -127,3 +127,46 @@ export async function sendRecoveryPasswordEmailUser(email: string) {
         });
     }
 }
+
+export async function getUserInformationAndStatsById(userId: string) {
+    const userData = await fb.getUserById(userId);
+    const partiesList = await fb.getPartyByUserId(userId);
+    const stats = partiesList?.map((party) => {
+        const userStats = party?.stats?.find(
+            (stat: { userId: string }) => stat.userId === userId
+        );
+        const goalsPerVictory = userStats?.goals / userStats?.victory;
+        return {
+            goals: userStats.goals,
+            victory: userStats.victory,
+            goalsPerVictory: Number(goalsPerVictory.toFixed(1)),
+            partyId: party.id,
+            date: party.date.seconds * 1000,
+        };
+    });
+    const totalGoals =
+        stats?.reduce(
+            (acc: number, curr: { goals: number }) => acc + curr.goals,
+            0
+        ) || 0;
+    const totalVictories =
+        stats?.reduce(
+            (acc: number, curr: { victory: number }) => acc + curr.victory,
+            0
+        ) || 0;
+    const partiesPlayed = stats?.length || 0;
+    const goalsByPartyAverage = Number((totalGoals / partiesPlayed).toFixed(2));
+    const victoriesByPartyAverage = Number(
+        (totalVictories / partiesPlayed).toFixed(2)
+    );
+
+    return {
+        ...userData as UserInterface,
+        totalGoals,
+        totalVictories,
+        partiesPlayed,
+        goalsByPartyAverage,
+        victoriesByPartyAverage,
+        stats: stats?.sort((a, b) => b.date - a.date) || [],
+    };
+}

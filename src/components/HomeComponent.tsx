@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { useStore } from "@nanostores/react";
-import { getAccessToken, userInfo, userInfoLoading } from "../stores/userStore";
+import {
+  getAccessToken,
+  getUserInformationAndStatsById,
+  userInfo,
+  userInfoLoading,
+} from "../stores/userStore";
 import UsersTable from "./UsersTable";
 import { Loader } from "./Loader";
 import { RegisterCaimaButton } from "./RegisterCaimaButton";

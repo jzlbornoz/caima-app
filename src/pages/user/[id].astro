@@ -1,0 +1,10 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { UserInformation } from "../../components/UserInformation/UserInformation";
+
+const { id } = Astro.params;
+---
+
+<Layout title={`Caimas App | Player Statistics`}>
+  <UserInformation userId={id as string} client:only="react" />
+</Layout>

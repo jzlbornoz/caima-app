@@ -114,7 +114,13 @@ const CustomDataTable = ({
               }
             >
               <td className="pr-6 pl-4 py-4 border-gray-200">
-                {item?.userData?.name}
+                <span
+                  onClick={() =>
+                    (window.location.href = `/user/${item?.userData?.id}`)
+                  }
+                >
+                  {item?.userData?.name}
+                </span>
               </td>
               <td className="py-3  text-center w-10 border-gray-200">
                 {item.goals}

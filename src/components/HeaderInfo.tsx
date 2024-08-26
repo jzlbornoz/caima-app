@@ -12,7 +12,10 @@ const HeaderInfo = () => {
   return (
     <>
       {$userInfo?.name && (
-        <span className="text-textColor w-full text-center">
+        <span
+          className="text-textColor w-full text-center"
+          onClick={() => (window.location.href = `/user/${$userInfo?.id}`)}
+        >
           {$userInfo?.name}
         </span>
       )}
